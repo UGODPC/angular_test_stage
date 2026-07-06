@@ -1,11 +1,11 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, NgModule, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ListeLivres } from './liste-livres/liste-livres';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ListeLivres, HttpClient],
+  imports: [RouterOutlet, ListeLivres],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
