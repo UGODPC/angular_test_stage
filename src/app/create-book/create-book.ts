@@ -27,6 +27,7 @@ export class CreateBook implements OnInit {
       next: (data) => {
         console.log('Livre créé :', data);
         this.successMessage = 'Livre créé avec succès !';
+        this.goToListeLivre();
       },
       error: (error) => {
         console.error('Erreur lors de la création :', error);
@@ -43,6 +44,5 @@ export class CreateBook implements OnInit {
   {
     console.log(this.book);
     this.saveLivre();
-    this.goToListeLivre();
   }
 }
