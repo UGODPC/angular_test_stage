@@ -1,11 +1,12 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Book } from '../book';
 import { BookService } from '../book-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-liste-livres',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './liste-livres.html',
   styleUrl: './liste-livres.css',
 })
