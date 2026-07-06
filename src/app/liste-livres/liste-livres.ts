@@ -1,7 +1,9 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+// liste-livres.ts
+import { Component, OnInit } from '@angular/core';
 import { Book } from '../book';
 import { BookService } from '../book-service';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router'; // <-- Ajoute cet import
 
 @Component({
   selector: 'app-liste-livres',
@@ -11,27 +13,33 @@ import { CommonModule } from '@angular/common';
   styleUrl: './liste-livres.css',
 })
 export class ListeLivres implements OnInit {
-
   books: Book[] = [];
+  loading: boolean = false;
 
-  constructor(private bookService: BookService)
-  {
-
-  }
+  constructor(
+    private bookService: BookService,
+    private route: ActivatedRoute // <-- Injecte ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
-    this.getLivres();
+    // S'abonne aux changements de route
+    this.route.params.subscribe(() => {
+      this.getLivres(); // Recharge les données à chaque navigation
+    });
   }
 
-  private getLivres()
-  {
-    this.bookService.getListeLivre().subscribe(data => { 
-      this.books = data;
+  private getLivres() {
+    this.loading = true;
+    this.bookService.getListeLivre().subscribe({
+      next: (data) => {
+        this.books = data;
+        this.loading = false;
+        console.log('Livres chargés :', this.books);
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('Erreur :', err);
+      }
     });
   }
 }
-
-//S'abonne à l'Observable pour recevoir les données quand elles arrivent.
-//data : Les données reçues de l'API (devrait être un tableau de Book).
-//this.books = data : Met à jour la propriété books avec les données reçues.
-//Angular détecte automatiquement ce changement et met à jour le template HTML.

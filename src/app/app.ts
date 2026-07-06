@@ -1,12 +1,12 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, NgModule, signal } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { ListeLivres } from './liste-livres/liste-livres';
+import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, FormsModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
