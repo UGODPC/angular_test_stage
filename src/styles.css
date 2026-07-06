@@ -2,11 +2,16 @@
 
 .footer
 {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
     height: 70px;
     background-color: blue;
     text-align: center;
     color: white;
+}
+
+.container
+{
+    margin-bottom: 100px;
 }

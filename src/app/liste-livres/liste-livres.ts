@@ -1,9 +1,10 @@
 // liste-livres.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { Book } from '../book';
 import { BookService } from '../book-service';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router'; // <-- Ajoute cet import
 
 @Component({
   selector: 'app-liste-livres',
@@ -13,33 +14,17 @@ import { ActivatedRoute } from '@angular/router'; // <-- Ajoute cet import
   styleUrl: './liste-livres.css',
 })
 export class ListeLivres implements OnInit {
-  books: Book[] = [];
-  loading: boolean = false;
-
-  constructor(
-    private bookService: BookService,
-    private route: ActivatedRoute // <-- Injecte ActivatedRoute
-  ) { }
+  private bookService = inject(BookService);
+  private route = inject(ActivatedRoute);
+  
+  // Observable pour les livres
+  books$!: Observable<Book[]>;
+  loading = false;
 
   ngOnInit(): void {
-    // S'abonne aux changements de route
-    this.route.params.subscribe(() => {
-      this.getLivres(); // Recharge les données à chaque navigation
-    });
-  }
-
-  private getLivres() {
     this.loading = true;
-    this.bookService.getListeLivre().subscribe({
-      next: (data) => {
-        this.books = data;
-        this.loading = false;
-        console.log('Livres chargés :', this.books);
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error('Erreur :', err);
-      }
+    this.route.params.subscribe(() => {
+      this.books$ = this.bookService.getListeLivre();
     });
   }
 }
