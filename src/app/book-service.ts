@@ -16,6 +16,11 @@ export class BookService {
         return this.httpClient.get<Book[]>(`${this.baseURL}/liste`);
     }
 
+    getBookById(id: number): Observable<Book>
+    {
+        return this.httpClient.get<Book>(`${this.baseURL}/${id}`);
+    }
+
     createLivre(book: Book): Observable<any>
     {
         const payload = {
@@ -23,7 +28,12 @@ export class BookService {
             bookPages: book.pages
         };
         return this.httpClient.post<string>(`${this.baseURL}`, payload, {
-        responseType: 'text' as 'json' // <-- Indique que la réponse est du texte
-    });
+            responseType: 'text' as 'json' // <-- Indique que la réponse est du texte
+        });
+    }
+
+    updateLivre(id: number, book: Book): Observable<any>
+    {
+        return this.httpClient.put(`${this.baseURL}/update/${id}`, book);
     }
 }
