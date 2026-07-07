@@ -34,6 +34,13 @@ export class BookService {
 
     updateLivre(id: number, book: Book): Observable<any>
     {
-        return this.httpClient.put(`${this.baseURL}/update/${id}`, book);
+        const payload = {
+            bookName: book.name,
+            bookPages: book.pages
+        };
+
+        return this.httpClient.put(`${this.baseURL}/update/${id}`, payload, {
+            responseType: 'text' as 'json'
+        });
     }
 }
