@@ -5,11 +5,12 @@ import { Observable } from 'rxjs';
 import { Book } from '../book';
 import { BookService } from '../book-service';
 import { Router } from '@angular/router';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-liste-livres',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatPaginatorModule],
   templateUrl: './liste-livres.html',
   styleUrl: './liste-livres.css',
 })
@@ -18,15 +19,21 @@ export class ListeLivres implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
-  
+    
   books$!: Observable<Book[]>;
   loading = false;
+  currentPage = 0;
 
   ngOnInit(): void {
     this.loading = true;
     this.route.params.subscribe(() => {
       this.loadBooks();
     });
+  }
+
+  handlePageEvent(pageEvent: PageEvent)
+  {
+    console.log('handlePageEvent', pageEvent);
   }
 
   loadBooks()
