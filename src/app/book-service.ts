@@ -43,4 +43,11 @@ export class BookService {
             responseType: 'text' as 'json'
         });
     }
+
+    deleteLivre(id: number): Observable<any>
+    {
+        return this.httpClient.delete(`${this.baseURL}/delete/${id}`, {
+            responseType: 'text' as 'json'
+        });
+    }
 }

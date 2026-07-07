@@ -19,6 +19,7 @@
           <td>{{book.pages}}</td>
           <td>
             <button (click) = "updateBook(book.id)" class="btn btn-info">Modifier</button> <!--Le (click) est le click event d'Angular-->
+            <button (click) = "deleteBook(book.id)" class="btn btn-danger" style="margin-left: 15px;">Supprimer</button>
           </td>
         </tr>
       }
