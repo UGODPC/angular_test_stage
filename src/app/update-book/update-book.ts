@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Book } from '../book';
@@ -16,6 +16,7 @@ export class UpdateBook implements OnInit {
   private bookService = inject(BookService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   id: number = 0;
   book: Book = new Book();
@@ -25,6 +26,7 @@ export class UpdateBook implements OnInit {
     this.bookService.getBookById(this.id).subscribe({
       next: (data) => {
         this.book = data;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.log(error);
