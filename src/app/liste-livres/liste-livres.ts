@@ -19,10 +19,11 @@ export class ListeLivres implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
-    
+
   books$!: Observable<Book[]>;
   loading = false;
   currentPage = 0;
+  livreCompteur: number = this.bookService.getListeLivre.length;
 
   ngOnInit(): void {
     this.loading = true;
