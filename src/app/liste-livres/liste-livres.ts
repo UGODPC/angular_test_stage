@@ -1,29 +1,40 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, ViewChild, CUSTOM_ELEMENTS_SCHEMA, SchemaMetadata } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { Book } from '../book';
 import { BookService } from '../book-service';
 import { Router } from '@angular/router';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table'
+import { MatFormField } from '@angular/material/select';
+import { MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-liste-livres',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule],
+  imports: [CommonModule, MatPaginatorModule, MatTableModule, MatFormField, MatInputModule],
   templateUrl: './liste-livres.html',
   styleUrl: './liste-livres.css',
 })
-export class ListeLivres implements OnInit {
+export class ListeLivres implements OnInit, AfterViewInit {
   private bookService = inject(BookService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  
+  dataSource = new MatTableDataSource<Book>();
+
+  displayedColumns: string[] = ['id', 'name', 'pages', 'actions'];
 
   books: Book[] = [];
   loading = false;
   currentPage = 0;
+  pageSize = 5; //Toujours 5 au départ
   livreCompteur: number = 0;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
 
   ngOnInit(): void {
     this.loading = true;
@@ -32,29 +43,47 @@ export class ListeLivres implements OnInit {
     });
   }
 
-  handlePageEvent(pageEvent: PageEvent)
-  {
-    console.log('handlePageEvent', pageEvent);
-    this.currentPage = pageEvent.pageIndex;
+
+  ngAfterViewInit() {
+    if(this.paginator)
+    {
+      this.dataSource.paginator = this.paginator;
+    }
+    console.log("Paginator connecté.");
   }
 
   loadBooks() {
     this.loading = true;
     this.cdr.detectChanges();
+
     this.bookService.getListeLivre().subscribe({
       next: (books) => {
-        this.books = books;
+        this.dataSource.data = books;
         this.livreCompteur = books.length; //Pour le nombre total de livres
+        //console.log(this.dataSource);
         this.loading = false;
-        this.cdr.detectChanges();
+        this.cdr.detectChanges(); //à modifier avec un timeout si jamais ??
         console.log('Livres chargés :', this.books.length);
       },
       error: (error) => {
         console.error('Erreur :', error);
         this.loading = false;
+        this.dataSource.data = [];
+        this.livreCompteur = 0;
         this.cdr.detectChanges();
+      },
+      complete: () => {
+        this.dataSource.paginator = this.paginator;
+        console.log("Data loadé dans le bon !");
       }
     });
+  }
+
+  handlePageEvent(pageEvent: PageEvent)
+  {
+    console.log('handlePageEvent', pageEvent);
+    this.currentPage = pageEvent.pageIndex;
+    this.pageSize = pageEvent.pageSize;
   }
 
   updateBook(id: number)
@@ -79,5 +108,10 @@ export class ListeLivres implements OnInit {
         alert('Erreur lors de la suppression du livre.');
       }
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }

@@ -8,4 +8,10 @@
 {
     margin-left: 15px;
 }
-        
+
+.oe
+{
+    display: inline-flex;
+    width: 100%;
+    justify-content: space-between;
+}
