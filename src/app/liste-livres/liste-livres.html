@@ -3,10 +3,10 @@
 
 
   <mat-paginator
-  [length]="20"
-  [pageSize]="10"
+  [length]="livreCompteur"
+  [pageSize]="5"
   [showFirstLastButtons]="true"
-  [pageSizeOptions]="[5, 10, 20]"
+  [pageSizeOptions]="[3, 5, 10]"
   [pageIndex]="currentPage"
   (page)="handlePageEvent($event)"
   >
@@ -22,8 +22,14 @@
     </tr>
   </thead>
   <tbody>
-    @if (books$ | async; as books) {
-      @for(book of books; track book.id) {
+    @if(loading)
+    {
+      <tr><td colspan="4">Chargement...</td></tr>
+    }
+    @else
+    {
+      @for(book of books; track book.id)
+      {
         <tr>
           <td>{{book.id}}</td>
           <td>{{book.name}}</td>
@@ -37,8 +43,6 @@
       @empty {
         <tr><td colspan="4">Aucun livre disponible.</td></tr>
       }
-    } @else {
-      <tr><td colspan="4">Chargement...</td></tr>
     }
   </tbody>
 </table>

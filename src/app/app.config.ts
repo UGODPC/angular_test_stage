@@ -9,7 +9,8 @@ import { PageEvent } from '@angular/material/paginator';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration(),
+    provideRouter(routes),
+    provideClientHydration(),
     provideHttpClient(),
   ]
 };

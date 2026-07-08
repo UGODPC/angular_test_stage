@@ -20,10 +20,10 @@ export class ListeLivres implements OnInit {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
-  books$!: Observable<Book[]>;
+  books: Book[] = [];
   loading = false;
   currentPage = 0;
-  livreCompteur: number = this.bookService.getListeLivre.length;
+  livreCompteur: number = 0;
 
   ngOnInit(): void {
     this.loading = true;
@@ -35,13 +35,26 @@ export class ListeLivres implements OnInit {
   handlePageEvent(pageEvent: PageEvent)
   {
     console.log('handlePageEvent', pageEvent);
+    this.currentPage = pageEvent.pageIndex;
   }
 
-  loadBooks()
-  {
+  loadBooks() {
     this.loading = true;
-    this.books$ = this.bookService.getListeLivre();
-    this.loading = false;
+    this.cdr.detectChanges();
+    this.bookService.getListeLivre().subscribe({
+      next: (books) => {
+        this.books = books;
+        this.livreCompteur = books.length; //Pour le nombre total de livres
+        this.loading = false;
+        this.cdr.detectChanges();
+        console.log('Livres chargés :', this.books.length);
+      },
+      error: (error) => {
+        console.error('Erreur :', error);
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   updateBook(id: number)
@@ -59,9 +72,7 @@ export class ListeLivres implements OnInit {
     this.bookService.deleteLivre(id).subscribe({
       next: (data) => {
         console.log('Livre supprimé :', data);
-        this.loadBooks();
-        this.cdr.detectChanges();
-        
+        this.loadBooks();        
       },
       error: (error) => {
         console.error('Erreur :', error);
