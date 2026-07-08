@@ -63,7 +63,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
         //console.log(this.dataSource);
         this.loading = false;
         this.cdr.detectChanges(); //à modifier avec un timeout si jamais ??
-        console.log('Livres chargés :', this.books.length);
+        console.log('Livres chargés :', this.livreCompteur);
       },
       error: (error) => {
         console.error('Erreur :', error);
@@ -74,6 +74,10 @@ export class ListeLivres implements OnInit, AfterViewInit {
       },
       complete: () => {
         this.dataSource.paginator = this.paginator;
+        this.dataSource.filterPredicate = function(data, filter: string): boolean {
+          return(data.name.toLowerCase().startsWith(filter));
+          //En gros pour filtrer sur les noms seulement et qui commencent par ce que je rentre dans la recherche de filtre
+        }
         console.log("Data loadé dans le bon !");
       }
     });
