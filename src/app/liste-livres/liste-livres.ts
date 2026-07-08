@@ -118,4 +118,100 @@ export class ListeLivres implements OnInit, AfterViewInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
+  exportToExcel() {
+    // 1. Construire le contenu HTML du fichier Excel
+    const htmlContent = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+            xmlns:x="urn:schemas-microsoft-com:office:excel" 
+            xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+          <meta charset="UTF-8">
+          <!--[if gte mso 9]>
+          <xml>
+            <x:ExcelWorkbook>
+              <x:ExcelWorksheets>
+                <x:ExcelWorksheet>
+                  <x:Name>Livres</x:Name>
+                  <x:WorksheetOptions>
+                    <x:DisplayGridlines/>
+                  </x:WorksheetOptions>
+                </x:ExcelWorksheet>
+              </x:ExcelWorksheets>
+            </x:ExcelWorkbook>
+          </xml>
+          <![endif]-->
+          <style>
+            th { 
+              background-color: #4472C4; 
+              color: #FFFFFF; 
+              font-weight: bold;
+              padding: 8px;
+              text-align: center;
+            }
+            td { 
+              padding: 8px;
+              border: 1px solid #CCCCCC;
+            }
+            .number { 
+              text-align: center;
+            }
+          </style>
+        </head>
+        <body>
+          <h2>Liste des livres</h2>
+          <p><strong>Exporté le :</strong> ${new Date().toLocaleString()}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Pages</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.dataSource.data.map(book => `
+                <tr>
+                  <td class="number">${book.id}</td>
+                  <td>${this.escapeHtml(book.name)}</td>
+                  <td class="number">${book.pages}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3"><strong>Total : ${this.dataSource.data.length} livre(s)</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </body>
+      </html>
+    `;
+
+    // 2. Créer le Blob
+    const blob = new Blob([htmlContent], { 
+      type: 'application/vnd.ms-excel;charset=utf-8' 
+    });
+
+    // 3. Télécharger le fichier
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `livres_${new Date().toISOString().split('T')[0]}.xls`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+  }
+
+  // Sécuriser les caractères HTML
+  private escapeHtml(text: string): string {
+    const map: { [key: string]: string } = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, (m) => map[m]);
+  }
 }
