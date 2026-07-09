@@ -1,19 +1,38 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Axios } from '../axios';
-import { response } from 'express';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-authentification',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './authentification.html',
   styleUrl: './authentification.css',
 })
 export class Authentification implements OnInit {
   data: string[] = [];
+  loading: boolean = false;
+  errorMessage: string = '';
 
-  axiosService = inject(Axios);
+  private http = inject(HttpClient);
 
   ngOnInit(): void {
-    this.axiosService.request("GET", "/messages", "").then((response) => this.data = response.data) //à voir si besoin de modifier !
+    this.loading = true;
+    this.errorMessage = '';
+    
+    // ✅ Syntaxe HttpClient (Observable)
+    this.http.get<string[]>('http://localhost:8080/messages')
+      .subscribe({
+        next: (data) => {
+          this.data = data;
+          this.loading = false;
+          console.log('✅ Données reçues :', this.data);
+        },
+        error: (error) => {
+          console.error('❌ Erreur :', error);
+          this.errorMessage = 'Erreur lors du chargement des messages.';
+          this.loading = false;
+        }
+      });
   }
 }
