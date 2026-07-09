@@ -1,18 +1,33 @@
 <div class="row justify-content-md-center">
-    <div class="col-4">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Réponse Backend</h5>
+  <div class="col-4">
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">Réponse Backend</h5>
+            @if(loading)
+            {
+                <p class="card-text">⏳ Chargement...</p>
+            }
+
+            @if(errorMessage)
+            {
+            <p class="card-text text-danger">{{ errorMessage }}</p>
+            }
+
+            @if(!loading && !errorMessage)
+            {
                 <p class="card-text">Contenu :</p>
                 <ul>
-                    <li>
-                        @for(line of data; track data)
-                        {
-                            {{line}}
-                        }
-                    </li>
-                </ul>
-            </div>
-        </div>
+                @for(line of data; track line)
+                {
+                    <li>{{ line }}</li>
+                }
+                @empty
+                {
+                    <li>Aucun message disponible</li>
+                }
+            </ul>
+            }
+      </div>
     </div>
+  </div>
 </div>

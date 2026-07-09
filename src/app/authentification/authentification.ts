@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -15,6 +15,7 @@ export class Authentification implements OnInit {
   errorMessage: string = '';
 
   private http = inject(HttpClient);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.loading = true;
@@ -26,12 +27,14 @@ export class Authentification implements OnInit {
         next: (data) => {
           this.data = data;
           this.loading = false;
+          this.cdr.detectChanges();
           console.log('✅ Données reçues :', this.data);
         },
         error: (error) => {
           console.error('❌ Erreur :', error);
           this.errorMessage = 'Erreur lors du chargement des messages.';
           this.loading = false;
+          this.cdr.detectChanges();
         }
       });
   }
