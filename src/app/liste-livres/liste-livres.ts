@@ -24,8 +24,11 @@ export class ListeLivres implements OnInit, AfterViewInit {
   private cdr = inject(ChangeDetectorRef);
   
   dataSource = new MatTableDataSource<Book>();
-
   displayedColumns: string[] = ['id', 'name', 'pages', 'actions'];
+
+  filterName: string = '';
+  filterMinPages: number | null = null;
+  filterMaxPages: number | null = null;
 
   books: Book[] = [];
   loading = false;
@@ -49,6 +52,8 @@ export class ListeLivres implements OnInit, AfterViewInit {
     {
       this.dataSource.paginator = this.paginator;
     }
+    this.dataSource.filterPredicate = this.customFilterPredicate.bind(this);
+    
     console.log("Paginator connecté.");
   }
 
@@ -60,7 +65,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
       next: (books) => {
         this.dataSource.data = books;
         this.livreCompteur = books.length; //Pour le nombre total de livres
-        //console.log(this.dataSource);
+        console.log(this.dataSource);
         this.loading = false;
         this.cdr.detectChanges(); //à modifier avec un timeout si jamais ??
         console.log('Livres chargés :', this.livreCompteur);
@@ -71,14 +76,6 @@ export class ListeLivres implements OnInit, AfterViewInit {
         this.dataSource.data = [];
         this.livreCompteur = 0;
         this.cdr.detectChanges();
-      },
-      complete: () => {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.filterPredicate = function(data, filter: string): boolean {
-          return(data.name.toLowerCase().startsWith(filter));
-          //En gros pour filtrer sur les noms seulement et qui commencent par ce que je rentre dans la recherche de filtre
-        }
-        console.log("Data loadé dans le bon !");
       }
     });
   }
@@ -114,13 +111,81 @@ export class ListeLivres implements OnInit, AfterViewInit {
     });
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  customFilterPredicate(data: Book, filter: string): boolean
+  {
+    let matches = true;
+
+    //Filtre par nom
+    if(this.filterName && this.filterName.trim())
+    {
+      const searchTerm = this.filterName.toLowerCase().trim(); //On assigne une variable au nom que l'on tappe dans le filtrage.
+      matches = matches && data.name.toLowerCase().includes(searchTerm);
+    }
+
+    //Filtre par pages minimum
+    if(this.filterMinPages !== null && this.filterMinPages > 0)
+    {
+      matches = matches && data.pages >= this.filterMinPages;
+    }
+
+    //Filtre par pages maximum
+    if(this.filterMaxPages !== null && this.filterMaxPages > 0)
+    {
+      matches = matches && data.pages <= this.filterMaxPages;
+    }
+
+    return matches;
   }
 
-  exportToExcel() {
-    // 1. Construire le contenu HTML du fichier Excel
+  private applyFilters(): void {
+    //Déclencher le filtrage (le filterPredicate utilise les variables de classe)
+    this.dataSource.filter = 'trigger'; //N'importe quelle valeur non vide pour déclencher
+  }
+
+  //Filtre par nom
+  applyNameFilter(event: Event)
+  {
+    const value = (event.target as HTMLInputElement).value;
+    this.filterName = value;
+    this.applyFilters();
+
+    // Retourner à la première page
+    if(this.paginator)
+    {
+      this.paginator.firstPage();
+    }
+  }
+
+  //Filtre par pages minimum
+  applyMinPagesFilter(event: Event)
+  {
+    const value = (event.target as HTMLInputElement).value;
+    this.filterMinPages = value ? parseInt(value, 10) : null;
+    //Le parseInt(value, 10) c'est pour passer la string "value" à un int et 10 c'est pour la base (en l'occurence base 10 pour les entiers)
+    this.applyFilters();
+
+    if(this.paginator)
+    {
+      this.paginator.firstPage();
+    }
+  }
+
+  //Filtre par pages maximum
+  applyMaxPagesFilter(event: Event)
+  {
+    const value = (event.target as HTMLInputElement).value;
+    this.filterMaxPages = value ? parseInt(value, 10) : null;
+    this.applyFilters();
+
+    if(this.paginator)
+    {
+      this.paginator.firstPage();
+    }
+  }
+
+  exportToExcel()
+  {
+    //1. Construire le contenu HTML du fichier Excel
     const htmlContent = `
       <html xmlns:o="urn:schemas-microsoft-com:office:office" 
             xmlns:x="urn:schemas-microsoft-com:office:excel" 
@@ -188,12 +253,12 @@ export class ListeLivres implements OnInit, AfterViewInit {
       </html>
     `;
 
-    // 2. Créer le Blob
+    //2. Créer le Blob
     const blob = new Blob([htmlContent], { 
       type: 'application/vnd.ms-excel;charset=utf-8' 
     });
 
-    // 3. Télécharger le fichier
+    //3. Télécharger le fichier
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `livres_${new Date().toISOString().split('T')[0]}.xls`;
@@ -203,7 +268,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
     URL.revokeObjectURL(link.href);
   }
 
-  // Sécuriser les caractères HTML
+  //Sécuriser les caractères HTML
   private escapeHtml(text: string): string {
     const map: { [key: string]: string } = {
       '&': '&amp;',

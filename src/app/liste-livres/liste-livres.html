@@ -3,20 +3,30 @@
 
 <div>
   <button mat-raised-button (click)="exportToExcel()" class="btn btn-secondary" style="margin-bottom: 15px;">
-      📊 Exporter vers Excel
+      📊 Exporter le tout vers Excel
     </button>
 </div>
 
   
 <div class="oe">
   <mat-form-field style="width: 35%;">
-    <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Harry Potter" #input>
+    <mat-label>Filtre</mat-label>
+    <input matInput (keyup)="applyNameFilter($event)" placeholder="Ex. Harry Potter" #input>
+  </mat-form-field>
+
+  <mat-form-field style="width: 20%; margin-left: 15px;">
+    <mat-label>Min</mat-label>
+    <input matInput (keyup)="applyMinPagesFilter($event)" placeholder="Ex. 100" #input>
+  </mat-form-field>
+
+  <mat-form-field style="width: 20%; margin-left: 15px;">
+    <mat-label>Max</mat-label>
+    <input matInput (keyup)="applyMaxPagesFilter($event)" placeholder="Ex. 200" #input>
   </mat-form-field>
 
   <div class="col-md-6 d-flex justify-content-end">
     <mat-paginator
-      [length]="livreCompteur"
+      [length]="dataSource.filteredData.length"
       [pageSize]="5"
       [showFirstLastButtons]="true"
       [pageSizeOptions]="[3, 5, 10]"
