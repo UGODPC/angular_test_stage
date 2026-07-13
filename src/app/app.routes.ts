@@ -11,6 +11,6 @@ export const routes: Routes = [
     {path: 'creerLivre', component: CreateBook},
     {path: 'update-book/:id', component: UpdateBook},
     {path: 'authentification', component: Authentification},
-    {path: 'login', component: LoginForm},
+    //{path: 'login', component: LoginForm},
     {path: '', redirectTo: 'livres', pathMatch: 'full'} //Si le lien c'est juste localhost:4200, on renvoie vers /livres et le chemin match à 100%
 ];

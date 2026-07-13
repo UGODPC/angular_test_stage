@@ -1,33 +1,20 @@
-<div class="row justify-content-md-center">
-  <div class="col-4">
-    <div class="card" style="width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title">Réponse Backend</h5>
-            @if(loading)
-            {
-                <p class="card-text">⏳ Chargement...</p>
-            }
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Gestion du compte</h2>
+  
+  <app-login-form 
+    (onSubmitLoginEvent)="handleLogin($event)"
+    (onSubmitRegisterEvent)="handleRegister($event)">
+  </app-login-form>
 
-            @if(errorMessage)
-            {
-            <p class="card-text text-danger">{{ errorMessage }}</p>
-            }
-
-            @if(!loading && !errorMessage)
-            {
-                <p class="card-text">Contenu :</p>
-                <ul>
-                @for(line of data; track line)
-                {
-                    <li>{{ line }}</li>
-                }
-                @empty
-                {
-                    <li>Aucun message disponible</li>
-                }
-            </ul>
-            }
-      </div>
+  <!-- Messages de retour -->
+  @if (message) {
+    <div class="alert alert-success mt-3" role="alert">
+      {{ message }}
     </div>
-  </div>
+  }
+  @if (errorMessage) {
+    <div class="alert alert-danger mt-3" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
 </div>

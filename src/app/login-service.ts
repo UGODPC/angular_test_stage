@@ -7,20 +7,17 @@ import { Register } from './register';
 @Injectable({ providedIn: 'root' })
 export class LoginService {
     private baseURL = "http://localhost:8080";
-    constructor(private httpClient: HttpClient)
-    {
-
-    }
+    
+    constructor(private httpClient: HttpClient) { }
 
     onLogin(login: Login): Observable<any> {
+        // ✅ Le backend attend CredentialsDTO avec "login" et "password"
         const payload = {
-            loginName: login.loginName,
-            loginPassword: login.password
+            login: login.loginName,   // ← "login" pas "loginName"
+            password: login.password  // ← "password" pas "loginPassword"
         };
 
-        return this.httpClient.post<string>(`${this.baseURL}/login`, payload, {
-            responseType: 'text' as 'json' // <-- Indique que la réponse est du texte
-        });
+        return this.httpClient.post<any>(`${this.baseURL}/login`, payload);
     }
 
     onRegister(register: Register): Observable<any> {
@@ -29,11 +26,9 @@ export class LoginService {
             lastName: register.lastName,
             login: register.login,
             password: register.password
-
         };
 
-        return this.httpClient.post<string>(`${this.baseURL}/login`, payload, {
-            responseType: 'text' as 'json' // <-- Indique que la réponse est du texte
-        });
+        // ✅ Correction : l'URL doit être /register, pas /login
+        return this.httpClient.post<any>(`${this.baseURL}/register`, payload);
     }
 }
