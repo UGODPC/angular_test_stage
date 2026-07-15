@@ -119,7 +119,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
     if(this.filterName && this.filterName.trim())
     {
       const searchTerm = this.filterName.toLowerCase().trim(); //On assigne une variable au nom que l'on tappe dans le filtrage.
-      matches = matches && data.name.toLowerCase().includes(searchTerm);
+      matches = matches && data.name.toLowerCase().includes(searchTerm); //C'est la qu'on assigne plus ou moins le filtre à un champs exacte dans la table.
     }
 
     //Filtre par pages minimum
@@ -149,7 +149,6 @@ export class ListeLivres implements OnInit, AfterViewInit {
     this.filterName = value;
     this.applyFilters();
 
-    // Retourner à la première page
     if(this.paginator)
     {
       this.paginator.firstPage();
@@ -166,7 +165,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
 
     if(this.paginator)
     {
-      this.paginator.firstPage();
+      this.paginator.firstPage(); //En gros, retourner à la page 1 si on est pas déjà dessus.
     }
   }
 

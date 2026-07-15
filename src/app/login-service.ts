@@ -11,10 +11,10 @@ export class LoginService {
     constructor(private httpClient: HttpClient) { }
 
     onLogin(login: Login): Observable<any> {
-        // ✅ Le backend attend CredentialsDTO avec "login" et "password"
+        //Le backend attend CredentialsDTO avec "login" et "password"
         const payload = {
-            login: login.loginName,   // ← "login" pas "loginName"
-            password: login.password  // ← "password" pas "loginPassword"
+            login: login.loginName,
+            password: login.password
         };
 
         return this.httpClient.post<any>(`${this.baseURL}/login`, payload);
@@ -28,7 +28,6 @@ export class LoginService {
             password: register.password
         };
 
-        // ✅ Correction : l'URL doit être /register, pas /login
         return this.httpClient.post<any>(`${this.baseURL}/register`, payload);
     }
 }
