@@ -1,14 +1,22 @@
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-  <ul class="navbar-nav">
+  <ul class="navbar-nav w-100"> <!--w-100 c'est pour dire width = 100% et donc ici que ul est de longueur 100%.-->
     <li class="nav-item">
       <a routerLink="livres" routerLinkActive="active" class="nav-link">Liste des livres</a>
     </li>
     <li class="nav-item">
       <a routerLink="creerLivre" routerLinkActive="active" class="nav-link">Ajouter un livre</a>
     </li>
-    <li>
+    <li class="nav-item">
       <a routerLink="authentification" routerLinkActive="active" class="nav-link">Compte</a>
     </li>
+      @if (isAuthenticated())
+      {
+        <li class="nav-item ms-auto" style="margin-right: 10px;"> <!--ms-auto est là pour pousser un/des éléments à droite à partir du moment où on l'utilise-->
+          <button (click)="logout()" class="btn btn-dark" style="color: white; text-decoration: none;">
+            Déconnexion
+          </button>
+        </li>
+      }
   </ul>
 </nav>
 
