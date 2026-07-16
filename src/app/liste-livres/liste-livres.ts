@@ -65,7 +65,6 @@ export class ListeLivres implements OnInit, AfterViewInit {
       next: (books) => {
         this.dataSource.data = books;
         this.livreCompteur = books.length; //Pour le nombre total de livres
-        console.log(this.dataSource);
         this.loading = false;
         this.cdr.detectChanges(); //à modifier avec un timeout si jamais ??
         console.log('Livres chargés :', this.livreCompteur);
@@ -82,7 +81,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
 
   handlePageEvent(pageEvent: PageEvent)
   {
-    console.log('handlePageEvent', pageEvent);
+    //console.log('handlePageEvent', pageEvent);
     this.currentPage = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
   }

@@ -19,6 +19,8 @@ export class App {
   private loginService = inject(LoginService);
   private router = inject(Router);
 
+  private USER_KEY = 'user_data';
+
   protected readonly title = signal('Ma bibliothèque');
 
   //Méthode de déconnexion
@@ -31,4 +33,9 @@ export class App {
   isAuthenticated(): boolean {
     return this.loginService.isAuthenticated();
   }
+
+  getUserData(): any {
+        const data = localStorage.getItem(this.USER_KEY);
+        return data ? JSON.parse(data) : null; //Un objet ou rien.
+    }
 }

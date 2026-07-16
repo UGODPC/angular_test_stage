@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-  <ul class="navbar-nav w-100"> <!--w-100 c'est pour dire width = 100% et donc ici que ul est de longueur 100%.-->
+  <ul class="navbar-nav w-100 align-items-center"> <!--w-100 c'est pour dire width = 100% et donc ici que ul est de longueur 100%.-->
     <li class="nav-item">
       <a routerLink="livres" routerLinkActive="active" class="nav-link">Liste des livres</a>
     </li>
@@ -11,7 +11,10 @@
     </li>
       @if (isAuthenticated())
       {
-        <li class="nav-item ms-auto" style="margin-right: 10px;"> <!--ms-auto est là pour pousser un/des éléments à droite à partir du moment où on l'utilise-->
+        <li class="nav-item ms-auto navbar-text" style="margin-right: 15px;"> <!--ms-auto est là pour pousser un/des éléments à droite à partir du moment où on l'utilise-->
+          <p>Bonjour {{getUserData().firstName}}</p>
+        </li>
+        <li class="nav-item" style="margin-right: 10px;">
           <button (click)="logout()" class="btn btn-dark" style="color: white; text-decoration: none;">
             Déconnexion
           </button>
