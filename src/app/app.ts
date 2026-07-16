@@ -16,7 +16,7 @@ import { Router } from '@angular/router'; // ← POUR LA REDIRECTION
   providers: [{provide: MatPaginatorIntl, useClass: PaginatorIntl}]
 })
 export class App {
-  private loginService = inject(LoginService);
+  public loginService = inject(LoginService);
   private router = inject(Router);
 
   private USER_KEY = 'user_data';

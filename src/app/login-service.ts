@@ -10,6 +10,8 @@ export class LoginService {
     private baseURL = "http://localhost:8080";
     private TOKEN_KEY = 'jwt_token';
     private USER_KEY = 'user_data';
+    private ROLES_KEY = 'user_roles';
+    private PERMISSIONS_KEY = 'user_permissions';
 
 
     constructor(private httpClient: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) { }
@@ -36,6 +38,8 @@ export class LoginService {
     removeAuthToken(): void {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem(this.USER_KEY);
+        localStorage.removeItem(this.ROLES_KEY);
+        localStorage.removeItem(this.PERMISSIONS_KEY);
     }
 
     isAuthenticated(): boolean {
@@ -49,11 +53,42 @@ export class LoginService {
 
     setUserData(user: any): void {
         localStorage.setItem(this.USER_KEY, JSON.stringify(user)); //stringify transforme la valeur user en un JSON
+
+        if(user.roles)
+        {
+            localStorage.setItem(this.ROLES_KEY, JSON.stringify(user.roles));
+        }
+        if(user.permissions)
+        {
+            localStorage.setItem(this.PERMISSIONS_KEY, JSON.stringify(user.permissions));
+        }
+    }
+
+    // ========== MÉTHODES POUR LES RÔLES ET PERMISSIONS ==========
+
+    getUserRoles(): string[] {
+        if (!this.isBrowser()) return [];
+        const roles = localStorage.getItem(this.ROLES_KEY);
+        return roles ? JSON.parse(roles) : [];
+    }
+
+    getUserPermissions(): string[] {
+        if (!this.isBrowser()) return [];
+        const permissions = localStorage.getItem(this.PERMISSIONS_KEY);
+        return permissions ? JSON.parse(permissions) : [];
+    }
+
+    hasRole(role: string): boolean {
+        return this.getUserRoles().includes(role);
+    }
+
+    hasPermission(permission: string): boolean {
+        return this.getUserPermissions().includes(permission);
     }
 
     // ========== APPELS HTTP ==========
 
-    /* Connexion - avec stockage automatique du token */
+    //Connexion - avec stockage automatique du token
     onLogin(credentials: { login: string, password: string }): Observable<any> {
         //Le backend attend CredentialsDTO avec "login" et "password"
         return this.httpClient.post<any>(`${this.baseURL}/login`, {
@@ -81,7 +116,6 @@ export class LoginService {
         });
     }
 
-    /* Déconnexion*/
     logout(): void {
         this.removeAuthToken();
         console.log('👋 Déconnexion - Token supprimé');

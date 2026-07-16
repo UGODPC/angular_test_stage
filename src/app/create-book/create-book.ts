@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Book } from '../book';
 import { FormsModule } from '@angular/forms';
 import { BookService } from '../book-service';
 import { error } from 'console';
 import { Router } from '@angular/router';
+import { LoginService } from '../login-service';
 
 @Component({
   selector: 'app-create-book',
@@ -12,14 +13,21 @@ import { Router } from '@angular/router';
   styleUrl: './create-book.css',
 })
 export class CreateBook implements OnInit {
+  private loginService = inject(LoginService);
+  private router = inject(Router);
 
   book: Book = new Book();
   successMessage: string = '';
 
-  constructor(private bookService: BookService, private router: Router) {}
+  constructor(private bookService: BookService) {}
 
   ngOnInit(): void {
-    
+    //VÉRIFIER LA PERMISSION À L'INITIALISATION
+    if(!this.loginService.hasPermission('BOOK_CREATE'))
+    {
+      alert("Connectez-vous pour créer un livre !");
+      this.router.navigate(['/livres']);
+    }
   }
 
   saveLivre() {

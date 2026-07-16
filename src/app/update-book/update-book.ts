@@ -5,6 +5,7 @@ import { Book } from '../book';
 import { BookService } from '../book-service';
 import { inject } from '@angular/core';
 import { error } from 'console';
+import { LoginService } from '../login-service';
 
 @Component({
   selector: 'app-update-book',
@@ -17,11 +18,19 @@ export class UpdateBook implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private loginService = inject(LoginService);
 
   id: number = 0;
   book: Book = new Book();
 
   ngOnInit(): void {
+    //VÉRIFIER LA PERMISSION À L'INITIALISATION
+    if(!this.loginService.hasPermission('BOOK_UPDATE'))
+    {
+      alert("Vous n'avez pas les droits de modifier ce livre !");
+      this.router.navigate(['/livres']);
+      return;
+    }
     this.id = this.route.snapshot.params['id'];
     this.bookService.getBookById(this.id).subscribe({
       next: (data) => {

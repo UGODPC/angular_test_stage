@@ -9,6 +9,7 @@ import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/p
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 import { MatFormField } from '@angular/material/select';
 import { MatInputModule} from '@angular/material/input';
+import { LoginService } from '../login-service';
 
 @Component({
   selector: 'app-liste-livres',
@@ -22,6 +23,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  public loginService = inject(LoginService);
   
   dataSource = new MatTableDataSource<Book>();
   displayedColumns: string[] = ['id', 'name', 'pages', 'actions'];
@@ -93,9 +95,16 @@ export class ListeLivres implements OnInit, AfterViewInit {
 
   deleteBook(id: number)
   {
-    if(!confirm('Voulez-vous vraiment supprimer ce livre ?')) //Confirm() permet de poser une question avec deux boutons.
+    //VÉRIFIER LA PERMISSION À L'INITIALISATION
+    if(!this.loginService.hasPermission('BOOK_UPDATE'))
     {
-      return; //Si la confirmation est annulé, on ne fait rien.
+        alert("Vous n'avez pas les droits pour supprimer un livre !");
+        this.router.navigate(['/livres']);
+        return;
+    }
+    else if(!confirm('Voulez-vous vraiment supprimer ce livre ?'))
+    {
+      return;
     }
 
     this.bookService.deleteLivre(id).subscribe({
