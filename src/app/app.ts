@@ -19,8 +19,6 @@ export class App {
   public loginService = inject(LoginService);
   private router = inject(Router);
 
-  private USER_KEY = 'user_data';
-
   protected readonly isLoggedIn = this.loginService.isLoggedIn;
   protected readonly title = signal('Ma bibliothèque');
 
@@ -35,8 +33,8 @@ export class App {
     return this.loginService.isAuthenticated();
   }
 
-  getUserData(): any {
-        const data = localStorage.getItem(this.USER_KEY);
-        return data ? JSON.parse(data) : null; //Un objet ou rien.
-    }
+  getUserData(): any
+  {
+    return this.loginService.getUserData(); //Un objet ou rien.
+  }
 }

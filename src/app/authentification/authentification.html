@@ -9,6 +9,18 @@
         <p class="card-text">{{getUserData().lastName}}</p>
       </div>
     </div>
+    @if (message())
+    {
+      <div class="alert alert-success mt-3" role="alert">
+        {{ message() }}
+      </div>
+    }
+    @if (errorMessage())
+    {
+      <div class="alert alert-danger mt-3" role="alert">
+        {{ errorMessage() }}
+      </div>
+    }
   }
   @else
   {
@@ -19,16 +31,16 @@
     </app-login-form>
 
     <!-- Messages de retour -->
-    @if (message)
+    @if (message())
     {
       <div class="alert alert-success mt-3" role="alert">
-        {{ message }}
+        {{ message() }}
       </div>
     }
-    @if (errorMessage)
+    @if (errorMessage())
     {
       <div class="alert alert-danger mt-3" role="alert">
-        {{ errorMessage }}
+        {{ errorMessage() }}
       </div>
     }
   }

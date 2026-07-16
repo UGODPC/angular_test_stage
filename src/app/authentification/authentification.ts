@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginForm } from '../login-form/login-form';
 import { LoginService } from '../login-service'; // ← On garde LoginService
@@ -18,28 +18,28 @@ export class Authentification {
 
   protected isLoggedIn = this.loginService.isLoggedIn;
 
-  message: string = '';
-  errorMessage: string = '';
+  protected message = signal<string>('');
+  protected errorMessage = signal<string>('');
 
   handleLogin(credentials: { login: string, password: string }) {
-    this.message = '';
-    this.errorMessage = '';
+    this.message.set('');
+    this.errorMessage.set('');
     
     this.loginService.onLogin(credentials).subscribe({
       next: (response) => {
         console.log('Connexion réussie :', response);
-        this.message = `Bienvenue ${response.firstName || 'utilisateur'} !`;
-        setTimeout(() => this.router.navigate(['/livres']), 500); //Si la connexion réussie, envoyer l'utilisateur vers la liste des livres.
+        this.message.set(`Bienvenue ${response.firstName || 'utilisateur'}, redirection...`);
+        setTimeout(() => this.router.navigate(['/livres']), 3000); //Si la connexion réussie, envoyer l'utilisateur vers la liste des livres.
       },
       error: (error) => {
         console.error('Erreur :', error);
         if(error.status === 403 || error.status === 401) //Interdit ou Pas Authorisé
         {
-          this.errorMessage = 'Identifiants incorrects.';
+          this.errorMessage.set('Identifiants incorrects.');
         }
         else
         {
-          this.errorMessage = 'Erreur de connexion.';
+          setTimeout(() => this.errorMessage.set('Erreur de connexion.'), 200);
         }
       }
     });
@@ -47,8 +47,8 @@ export class Authentification {
 
   handleRegister(userData: { firstName: string, lastName: string, login: string, password: string })
   {
-    this.message = '';
-    this.errorMessage = '';
+    this.message.set('');
+    this.errorMessage.set('');
     
     const registerData = new Register(
       userData.firstName,
@@ -59,12 +59,12 @@ export class Authentification {
     
     this.loginService.onRegister(registerData).subscribe({
       next: (response) => {
-        this.message = 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
+        this.message.set('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
         console.log('Inscription réussie :', response);
       },
       error: (error) => {
         console.error('Erreur d\'inscription :', error);
-        this.errorMessage = 'Ce login est peut-être déjà utilisé.';
+        this.errorMessage.set('Ce login est peut-être déjà utilisé.');
       }
     });
   }
@@ -72,6 +72,8 @@ export class Authentification {
   logout()
   {
     this.loginService.logout();
+    this.errorMessage.set('');
+    this.message.set('');
     this.router.navigate(['/authentification']);
   }
 
