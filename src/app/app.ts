@@ -21,6 +21,7 @@ export class App {
 
   private USER_KEY = 'user_data';
 
+  protected readonly isLoggedIn = this.loginService.isLoggedIn;
   protected readonly title = signal('Ma bibliothèque');
 
   //Méthode de déconnexion

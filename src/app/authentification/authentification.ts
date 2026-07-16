@@ -15,7 +15,9 @@ import { Router } from '@angular/router';
 export class Authentification {
   private loginService = inject(LoginService);
   private router = inject(Router);
-  
+
+  protected isLoggedIn = this.loginService.isLoggedIn;
+
   message: string = '';
   errorMessage: string = '';
 
@@ -27,7 +29,7 @@ export class Authentification {
       next: (response) => {
         console.log('Connexion réussie :', response);
         this.message = `Bienvenue ${response.firstName || 'utilisateur'} !`;
-        setTimeout(() => this.router.navigate(['/livres']), 1000); //Si la connexion réussie, envoyer l'utilisateur vers la liste des livres.
+        setTimeout(() => this.router.navigate(['/livres']), 500); //Si la connexion réussie, envoyer l'utilisateur vers la liste des livres.
       },
       error: (error) => {
         console.error('Erreur :', error);
@@ -71,5 +73,15 @@ export class Authentification {
   {
     this.loginService.logout();
     this.router.navigate(['/authentification']);
+  }
+
+  isAuthenticated(): boolean
+  {
+    return this.loginService.isAuthenticated();
+  }
+  
+  getUserData(): any
+  {
+    return this.loginService.getUserData();//Un objet ou rien.
   }
 }

@@ -1,23 +1,35 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4">Gestion du compte</h2>
-  
-  <!-- Afficher le composant login-form-->
-  <app-login-form 
-    (onSubmitLoginEvent)="handleLogin($event)"
-    (onSubmitRegisterEvent)="handleRegister($event)">
-  </app-login-form>
-
-  <!-- Messages de retour -->
-  @if (message)
+  @if(isLoggedIn())
   {
-    <div class="alert alert-success mt-3" role="alert">
-      {{ message }}
+    <div class="card text-white bg-primary text-center">
+      <div class="card-header">{{getUserData().login}}</div>
+      <div class="card-body">
+        <p class="card-text">{{getUserData().firstName}}</p>
+        <p class="card-text">{{getUserData().lastName}}</p>
+      </div>
     </div>
   }
-  @if (errorMessage)
+  @else
   {
-    <div class="alert alert-danger mt-3" role="alert">
-      {{ errorMessage }}
-    </div>
+    <!-- Afficher le composant login-form-->
+    <app-login-form 
+      (onSubmitLoginEvent)="handleLogin($event)"
+      (onSubmitRegisterEvent)="handleRegister($event)">
+    </app-login-form>
+
+    <!-- Messages de retour -->
+    @if (message)
+    {
+      <div class="alert alert-success mt-3" role="alert">
+        {{ message }}
+      </div>
+    }
+    @if (errorMessage)
+    {
+      <div class="alert alert-danger mt-3" role="alert">
+        {{ errorMessage }}
+      </div>
+    }
   }
 </div>

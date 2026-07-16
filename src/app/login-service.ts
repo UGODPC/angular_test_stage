@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, PLATFORM_ID, Inject} from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { Login } from './login';
 import { Register } from './register';
 
 @Injectable({ providedIn: 'root' })
@@ -13,8 +12,15 @@ export class LoginService {
     private ROLES_KEY = 'user_roles';
     private PERMISSIONS_KEY = 'user_permissions';
 
+    //SIGNAL POUR L'ÉTAT D'AUTHENTIFICATION
+    private authStatus = signal<boolean>(false);
+    public readonly isLoggedIn = this.authStatus.asReadonly();
 
-    constructor(private httpClient: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) { }
+
+    constructor(private httpClient: HttpClient, @Inject(PLATFORM_ID) private platformId: Object)
+    {
+        this.authStatus.set(this.isAuthenticated());
+    }
 
     // ========== GESTION DU TOKEN ==========
 
@@ -31,8 +37,13 @@ export class LoginService {
         return null; // Retourne null côté serveur
     }
 
-    setAuthToken(token: string): void {
-        localStorage.setItem(this.TOKEN_KEY, token);
+    setAuthToken(token: string): void
+    {
+        if(this.isBrowser())
+        {
+            localStorage.setItem(this.TOKEN_KEY, token);
+            this.authStatus.set(true); //Met le signal à jour
+        }
     }
 
     removeAuthToken(): void {
@@ -40,10 +51,12 @@ export class LoginService {
         localStorage.removeItem(this.USER_KEY);
         localStorage.removeItem(this.ROLES_KEY);
         localStorage.removeItem(this.PERMISSIONS_KEY);
+        this.authStatus.set(false);
     }
 
-    isAuthenticated(): boolean {
-        return !!this.getAuthToken();
+    isAuthenticated(): boolean
+    {
+        return !!this.getAuthToken(); //L'inverse, non-nullable
     }
 
     getUserData(): any {
@@ -118,6 +131,6 @@ export class LoginService {
 
     logout(): void {
         this.removeAuthToken();
-        console.log('👋 Déconnexion - Token supprimé');
+        console.log('Déconnexion - Token supprimé');
     }
 }
