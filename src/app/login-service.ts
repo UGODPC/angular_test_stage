@@ -111,20 +111,13 @@ export class LoginService {
         return this.hasRole('ROLE_ADMIN');
     }
 
-    promoteUser(login: string, targetRole: string): Observable<any>
-    {
-        return this.httpClient.post<any>(`${this.baseURL}/promote/${login}?targetRole=${targetRole}`, {})
+    promoteUser(login: string, targetRole: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.baseURL}/promote/${login}?targetRole=${targetRole}`, {})
         .pipe(tap((response: any) => {
-                if(response && response.token)
-                {
-                    // ✅ Mettre à jour le token et les données
-                    this.setAuthToken(response.token);
-                    this.setUserData(response);
-                    console.log(`✅ Utilisateur promu ${targetRole}`);
-                }
-            })
-        );
-    }
+            console.log(`✅ Utilisateur ${login} promu ${targetRole}`);
+        })
+    );
+}
 
     // ========== APPELS HTTP ==========
 

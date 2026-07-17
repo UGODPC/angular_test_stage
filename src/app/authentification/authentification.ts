@@ -29,7 +29,7 @@ export class Authentification {
       next: (response) => {
         console.log('Connexion réussie :', response);
         this.message.set(`Bienvenue ${response.firstName || 'utilisateur'}, redirection...`);
-        setTimeout(() => this.router.navigate(['/livres']), 3000); //Si la connexion réussie, envoyer l'utilisateur vers la liste des livres.
+        setTimeout(() => this.router.navigate(['/livres']), 1500); //Si la connexion réussie, envoyer l'utilisateur vers la liste des livres.
       },
       error: (error) => {
         console.error('Erreur :', error);
