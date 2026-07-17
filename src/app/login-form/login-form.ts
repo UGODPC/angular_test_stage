@@ -34,5 +34,6 @@ export class LoginForm {
 
   onSubmitRegister(): void {
     this.onSubmitRegisterEvent.emit({"firstName":this.firstName, "lastName":this.lastName, "login":this.login, "password":this.password});
+    this.active = "login";
   }
 }

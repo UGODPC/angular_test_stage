@@ -6,6 +6,12 @@
     <li class="nav-item">
       <a routerLink="creerLivre" routerLinkActive="active" class="nav-link">Ajouter un livre</a>
     </li>
+    @if(loginService.isAdmin())
+    {
+      <li class="nav-item">
+        <a routerLink="admin" routerLinkActive="active" class="nav-link">Admin</a>
+      </li>
+    }
     <li class="nav-item">
       <a routerLink="authentification" routerLinkActive="active" class="nav-link">Compte</a>
     </li>

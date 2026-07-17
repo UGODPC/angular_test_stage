@@ -99,6 +99,33 @@ export class LoginService {
         return this.getUserPermissions().includes(permission);
     }
 
+    isGuest(): boolean {
+        return this.hasRole('ROLE_GUEST');
+    }
+
+    isUser(): boolean {
+        return this.hasRole('ROLE_USER');
+    }
+
+    isAdmin(): boolean {
+        return this.hasRole('ROLE_ADMIN');
+    }
+
+    promoteUser(login: string, targetRole: string): Observable<any>
+    {
+        return this.httpClient.post<any>(`${this.baseURL}/promote/${login}?targetRole=${targetRole}`, {})
+        .pipe(tap((response: any) => {
+                if(response && response.token)
+                {
+                    // ✅ Mettre à jour le token et les données
+                    this.setAuthToken(response.token);
+                    this.setUserData(response);
+                    console.log(`✅ Utilisateur promu ${targetRole}`);
+                }
+            })
+        );
+    }
+
     // ========== APPELS HTTP ==========
 
     //Connexion - avec stockage automatique du token

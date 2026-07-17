@@ -24,13 +24,13 @@
             <div [ngClass]="active == 'login' ? 'tab-pane fade show active' : 'tab-pane fade'">
                 <form (ngSubmit)="onSubmitLogin()" #loginForm="ngForm">
                     <div class="form-outline mb-4">
-                        <input class="form-control" type="text" id="loginName" name="login" [(ngModel)]="login">
                         <label class="form-label" for="loginName">Nom d'utilisateur</label>
+                        <input class="form-control" type="text" id="loginName" name="login" [(ngModel)]="login">
                     </div>
 
                     <div class="form-outline mb-4">
-                        <input class="form-control" type="password" id="loginPassword" name="password" [(ngModel)]="password">
                         <label class="form-label" for="loginPassword">Mot de passe</label>
+                        <input class="form-control" type="password" id="loginPassword" name="password" [(ngModel)]="password">
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block mb-4">Se connecter</button>
@@ -44,23 +44,23 @@
                 <form (ngSubmit)="onSubmitRegister()" #loginForm="ngForm">
                     <!--Prénom-->
                     <div class="form-outline mb-4">
-                        <input class="form-control" type="text" id="firstName" name="firstName" [(ngModel)]="firstName">
                         <label class="form-label" for="firstName">Prénom</label>
+                        <input class="form-control" type="text" id="firstName" name="firstName" [(ngModel)]="firstName">
                     </div>
                     <!--Nom-->
                     <div class="form-outline mb-4">
-                        <input class="form-control" type="text" id="lastName" name="lastName" [(ngModel)]="lastName">
                         <label class="form-label" for="lastName">Nom</label>
+                        <input class="form-control" type="text" id="lastName" name="lastName" [(ngModel)]="lastName">
                     </div>
                     <!--Nom d'utilisateur (login)-->
                     <div class="form-outline mb-4">
-                        <input class="form-control" type="text" id="login" name="login" [(ngModel)]="login">
                         <label class="form-label" for="login">Nom d'utilisateur</label>
+                        <input class="form-control" type="text" id="login" name="login" [(ngModel)]="login">
                     </div>
                     <!--Mot de passe-->
                     <div class="form-outline mb-4">
-                        <input class="form-control" type="password" id="password" name="password" [(ngModel)]="password">
                         <label class="form-label" for="password">Mot de passe</label>
+                        <input class="form-control" type="password" id="password" name="password" [(ngModel)]="password">
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-block mb-4">Créer le compte</button>
