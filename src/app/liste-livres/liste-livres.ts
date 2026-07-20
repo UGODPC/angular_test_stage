@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, ViewChild, CUSTOM_ELEMENTS_SCHEMA, SchemaMetadata } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, ViewChild, SchemaMetadata } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { from, Observable } from 'rxjs';
@@ -52,9 +52,9 @@ export class ListeLivres implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     if(this.paginator)
     {
-      this.dataSource.paginator = this.paginator;
+      this.dataSource.paginator = this.paginator; //paginator vient avec dataSource du MatTableDataSource
     }
-    this.dataSource.filterPredicate = this.customFilterPredicate.bind(this);
+    this.dataSource.filterPredicate = this.customFilterPredicate.bind(this); //filterPredicate vient du MatTableDataSource
     
     console.log("Paginator connecté.");
   }
@@ -65,7 +65,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
 
     this.bookService.getListeLivre().subscribe({
       next: (books) => {
-        this.dataSource.data = books;
+        this.dataSource.data = books; //data vient du MatTableDataSource
         this.livreCompteur = books.length; //Pour le nombre total de livres
         this.loading = false;
         this.cdr.detectChanges(); //à modifier avec un timeout si jamais ??
@@ -147,7 +147,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
 
   private applyFilters(): void {
     //Déclencher le filtrage (le filterPredicate utilise les variables de classe)
-    this.dataSource.filter = 'trigger'; //N'importe quelle valeur non vide pour déclencher
+    this.dataSource.filter = 'trigger'; //N'importe quelle valeur non vide pour déclencher et filter vient du MatTableDataSource
   }
 
   //Filtre par nom
@@ -193,6 +193,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
   exportToExcel()
   {
     //1. Construire le contenu HTML du fichier Excel
+    //filterData vinet du MatTableData
     const htmlContent = `
       <html xmlns:o="urn:schemas-microsoft-com:office:office" 
             xmlns:x="urn:schemas-microsoft-com:office:excel" 
@@ -242,7 +243,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
               </tr>
             </thead>
             <tbody>
-              ${this.dataSource.data.map(book => `
+              ${this.dataSource.filteredData.map(book => `
                 <tr>
                   <td class="number">${book.id}</td>
                   <td>${this.escapeHtml(book.name)}</td>
@@ -252,7 +253,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="3"><strong>Total : ${this.dataSource.data.length} livre(s)</strong></td>
+                <td colspan="3"><strong>Total : ${this.dataSource.filteredData.length} livre(s)</strong></td>
               </tr>
             </tfoot>
           </table>
