@@ -1,47 +1,62 @@
-<div class="container mt-5">
-  <h2 class="text-center mb-4">Gestion du compte</h2>
-  @if(isLoggedIn())
-  {
-    <div class="card text-white bg-primary text-center">
-      <div class="card-header">{{getUserData().login}}</div>
-      <div class="card-body">
-        <p class="card-text">{{getUserData().firstName}}</p>
-        <p class="card-text">{{getUserData().lastName}}</p>
+<div class="auth-page">
+  @if(isLoggedIn()) {
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          {{ getUserData().firstName?.charAt(0)?.toUpperCase() }}{{ getUserData().lastName?.charAt(0)?.toUpperCase() }}
+        </div>
+        <div class="profile-info">
+          <h2 class="profile-name">{{ getUserData().firstName }} {{ getUserData().lastName }}</h2>
+          <p class="profile-login">&#64;{{ getUserData().login }}</p>
+        </div>
+      </div>
+
+      <div class="profile-body">
+        <div class="info-row">
+          <span class="info-label">Identifiant</span>
+          <span class="info-value">{{ getUserData().login }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Prénom</span>
+          <span class="info-value">{{ getUserData().firstName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Nom</span>
+          <span class="info-value">{{ getUserData().lastName }}</span>
+        </div>
+      </div>
+
+      @if(message()) {
+        <div class="alert alert-success" style="margin: 0 1.75rem 1.25rem;">{{ message() }}</div>
+      }
+      @if(errorMessage()) {
+        <div class="alert alert-danger" style="margin: 0 1.75rem 1.25rem;">{{ errorMessage() }}</div>
+      }
+
+      <div class="profile-footer">
+        <button (click)="logout()" class="btn btn-danger">
+          Se déconnecter
+        </button>
       </div>
     </div>
-    @if (message())
-    {
-      <div class="alert alert-success mt-3" role="alert">
-        {{ message() }}
-      </div>
-    }
-    @if (errorMessage())
-    {
-      <div class="alert alert-danger mt-3" role="alert">
-        {{ errorMessage() }}
-      </div>
-    }
-  }
-  @else
-  {
-    <!-- Afficher le composant login-form-->
-    <app-login-form 
+  } @else {
+    <!-- Auth forms -->
+    <div class="auth-header">
+      <h1 class="page-title">Bienvenue</h1>
+      <p class="page-subtitle">Connectez-vous ou créez un compte pour accéder à la bibliothèque</p>
+    </div>
+
+    <app-login-form
       (onSubmitLoginEvent)="handleLogin($event)"
       (onSubmitRegisterEvent)="handleRegister($event)">
     </app-login-form>
 
-    <!-- Messages de retour -->
-    @if (message())
-    {
-      <div class="alert alert-success mt-3" role="alert">
-        {{ message() }}
-      </div>
+    @if(message()) {
+      <div class="alert alert-success" style="max-width: 440px; margin: 1rem auto 0;">{{ message() }}</div>
     }
-    @if (errorMessage())
-    {
-      <div class="alert alert-danger mt-3" role="alert">
-        {{ errorMessage() }}
-      </div>
+    @if(errorMessage()) {
+      <div class="alert alert-danger" style="max-width: 440px; margin: 1rem auto 0;">{{ errorMessage() }}</div>
     }
   }
 </div>

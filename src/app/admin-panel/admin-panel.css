@@ -1,7 +1,120 @@
-.badge
-{
+.admin-page {
+  padding-top: 2rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.table-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.users-table {
+  width: 100%;
+}
+
+/* User cell */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-mini-avatar {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 12px;
-  padding: 5px 10px;
-  border-radius: 20px;
-  margin-top: 7px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.user-login {
+  font-weight: 500;
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* Role Badges */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.role-guest {
+  background: #F1F5F9;
+  color: #64748B;
+  border: 1px solid #E2E8F0;
+}
+
+.role-user {
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid #C7D2FE;
+}
+
+.role-admin {
+  background: var(--danger-light);
+  color: #DC2626;
+  border: 1px solid #FECACA;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center !important;
+  padding: 3.5rem 1rem !important;
+}
+
+.empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.empty-content p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

@@ -1,96 +1,115 @@
-<!-- liste-livres.html -->
-<h2>Liste des livres existants</h2>
-
-<div>
-  <button mat-raised-button (click)="exportToExcel()" class="btn btn-secondary" style="margin-bottom: 15px;">
-      📊 Exporter les livres filtrés
+<div class="books-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Bibliothèque</h1>
+      <p class="page-subtitle">{{ dataSource.filteredData.length }} livre(s) trouvé(s)</p>
+    </div>
+    <button mat-raised-button (click)="exportToExcel()" class="btn btn-secondary">
+      Exporter (.xls)
     </button>
-</div>
-
-  
-<div class="oe">
-  <mat-form-field style="width: 35%;">
-    <mat-label>Filtre</mat-label>
-    <input matInput (keyup)="applyNameFilter($event)" placeholder="Ex. Harry Potter" #input>
-  </mat-form-field>
-
-  <mat-form-field style="width: 20%; margin-left: 15px;">
-    <mat-label>Min</mat-label>
-    <input matInput (keyup)="applyMinPagesFilter($event)" placeholder="Ex. 100" #input>
-  </mat-form-field>
-
-  <mat-form-field style="width: 20%; margin-left: 15px;">
-    <mat-label>Max</mat-label>
-    <input matInput (keyup)="applyMaxPagesFilter($event)" placeholder="Ex. 200" #input>
-  </mat-form-field>
-
-  <div class="col-md-6 d-flex justify-content-end">
-    <mat-paginator
-      [length]="dataSource.filteredData.length"
-      [pageSize]="5"
-      [showFirstLastButtons]="true"
-      [pageSizeOptions]="[3, 5, 10]"
-      [pageIndex]="currentPage"
-      (page)="handlePageEvent($event)"
-    >
-    </mat-paginator>
   </div>
+
+  <!-- Filters Card -->
+  <div class="filters-card">
+    <mat-form-field class="filter-field" appearance="outline">
+      <mat-label>Rechercher par nom</mat-label>
+      <input matInput (keyup)="applyNameFilter($event)" placeholder="Ex. Harry Potter" #input>
+    </mat-form-field>
+
+    <mat-form-field class="filter-field filter-field-sm" appearance="outline">
+      <mat-label>Pages min</mat-label>
+      <input matInput type="number" (keyup)="applyMinPagesFilter($event)" placeholder="100" #input>
+    </mat-form-field>
+
+    <mat-form-field class="filter-field filter-field-sm" appearance="outline">
+      <mat-label>Pages max</mat-label>
+      <input matInput type="number" (keyup)="applyMaxPagesFilter($event)" placeholder="500" #input>
+    </mat-form-field>
+
+    <div class="filter-paginator">
+      <mat-paginator
+        [length]="dataSource.filteredData.length"
+        [pageSize]="5"
+        [showFirstLastButtons]="true"
+        [pageSizeOptions]="[3, 5, 10]"
+        [pageIndex]="currentPage"
+        (page)="handlePageEvent($event)">
+      </mat-paginator>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    <table mat-table [dataSource]="dataSource" class="books-table">
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let book">
+          <span class="book-id">#{{ book.id }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Titre</th>
+        <td mat-cell *matCellDef="let book">
+          <span class="book-name">{{ book.name }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Pages Column -->
+      <ng-container matColumnDef="pages">
+        <th mat-header-cell *matHeaderCellDef>Pages</th>
+        <td mat-cell *matCellDef="let book">
+          <span class="pages-badge">{{ book.pages }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let book">
+          <div class="action-btns">
+            <button (click)="updateBook(book.id)" class="btn btn-info btn-sm">Modifier</button>
+            <button (click)="deleteBook(book.id)" class="btn btn-danger btn-sm">Supprimer</button>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Header & Rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Empty state -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-state" [attr.colspan]="displayedColumns.length">
+          @if(loading) {
+            <div class="empty-content">
+              <div class="spinner"></div>
+              <span>Chargement des livres…</span>
+            </div>
+          } @else if (!loginService.isAuthenticated()) {
+            <div class="empty-content">
+              <span class="empty-icon">🔒</span>
+              <p>Connectez-vous pour accéder à la bibliothèque</p>
+              <button class="btn btn-primary" (click)="router.navigate(['/authentification'])">Se connecter</button>
+            </div>
+          } @else {
+            <div class="empty-content">
+              <span class="empty-icon">📭</span>
+              <p>Aucun livre ne correspond à votre recherche</p>
+            </div>
+          }
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  @if(!isAuthenticated()) {
+    <p class="text-muted-sm" style="margin-top: 0.75rem;">
+      Connectez-vous pour voir, ajouter et gérer les livres.
+    </p>
+  }
 </div>
-
-<table mat-table [dataSource]="dataSource" class="table table-striped table-bordered">
-  
-  <!-- Colonne ID -->
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef> ID </th>
-    <td mat-cell *matCellDef="let book"> {{ book.id }} </td>
-  </ng-container>
-
-  <!-- Colonne Nom -->
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef> Nom </th>
-    <td mat-cell *matCellDef="let book"> {{ book.name }} </td>
-  </ng-container>
-
-  <!-- Colonne Pages -->
-  <ng-container matColumnDef="pages">
-    <th mat-header-cell *matHeaderCellDef> Pages </th>
-    <td mat-cell *matCellDef="let book"> {{ book.pages }} </td>
-  </ng-container>
-
-  <!-- Colonne Actions -->
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef> Actions </th>
-    <td mat-cell *matCellDef="let book">
-      <button (click)="updateBook(book.id)" class="btn btn-info btn-sm">Modifier</button>
-      <button (click)="deleteBook(book.id)" class="btn btn-danger btn-sm" style="margin-left: 10px;">Supprimer</button>
-    </td>
-  </ng-container>
-
-  <!-- Ligne d'en-tête -->
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  
-  <!-- Lignes de données -->
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-  <!-- Message quand pas de données -->
-  <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" [attr.colspan]="displayedColumns.length" style="text-align: center; padding: 20px;">
-      @if(loading)
-      {
-        ⏳ Chargement des livres...
-      }
-      @else if (!loginService.isAuthenticated())
-      {
-        <button class="btn btn-dark" (click)="router.navigate(['/authentification'])">Se connecter</button>
-      }
-      @else
-      {
-        📭 Aucun livre disponible.
-      }
-    </td>
-  </tr>
-</table>
-@if(!isAuthenticated())
-{
-  <span>Vous devez vous connecter pour accéder à la liste les livres</span>
-}

@@ -1,71 +1,103 @@
-<div class="row justify-content-center">
-    <div class="col-4">
+<div class="auth-card">
+  <!-- Tabs -->
+  <div class="auth-tabs">
+    <button
+      class="auth-tab"
+      [class.active]="active === 'login'"
+      (click)="onLoginTab()">
+      Se connecter
+    </button>
+    <button
+      class="auth-tab"
+      [class.active]="active === 'register'"
+      (click)="onRegisterTab()">
+      Créer un compte
+    </button>
+  </div>
 
-        <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button 
-                    [ngClass]="active == 'login' ? 'nav-link active' : 'nav-link'" 
-                    id="tab-login" 
-                    (click)="onLoginTab()">
-                    Se connecter
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button 
-                    [ngClass]="active == 'register' ? 'nav-link active' : 'nav-link'" 
-                    id="tab-register" 
-                    (click)="onRegisterTab()">
-                    Créer un compte
-                </button>
-            </li>
-        </ul>
+  <!-- Login Form -->
+  @if(active === 'login') {
+    <form (ngSubmit)="onSubmitLogin()" class="auth-form">
+      <div class="form-group">
+        <label class="form-label" for="loginName">Nom d'utilisateur</label>
+        <input
+          class="form-control"
+          type="text"
+          id="loginName"
+          name="login"
+          [(ngModel)]="login"
+          placeholder="Votre identifiant"
+          autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Mot de passe</label>
+        <input
+          class="form-control"
+          type="password"
+          id="loginPassword"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="••••••••"
+          autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 0.5rem;">
+        Se connecter
+      </button>
+    </form>
+  }
 
-        <div class="tab-content">
-            <div [ngClass]="active == 'login' ? 'tab-pane fade show active' : 'tab-pane fade'">
-                <form (ngSubmit)="onSubmitLogin()" #loginForm="ngForm">
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="loginName">Nom d'utilisateur</label>
-                        <input class="form-control" type="text" id="loginName" name="login" [(ngModel)]="login">
-                    </div>
-
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="loginPassword">Mot de passe</label>
-                        <input class="form-control" type="password" id="loginPassword" name="password" [(ngModel)]="password">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block mb-4">Se connecter</button>
-                </form>
-            </div>
-
-
-
-
-            <div [ngClass]="active == 'register' ? 'tab-pane fade show active' : 'tab-pane fade'">
-                <form (ngSubmit)="onSubmitRegister()" #loginForm="ngForm">
-                    <!--Prénom-->
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="firstName">Prénom</label>
-                        <input class="form-control" type="text" id="firstName" name="firstName" [(ngModel)]="firstName">
-                    </div>
-                    <!--Nom-->
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="lastName">Nom</label>
-                        <input class="form-control" type="text" id="lastName" name="lastName" [(ngModel)]="lastName">
-                    </div>
-                    <!--Nom d'utilisateur (login)-->
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="login">Nom d'utilisateur</label>
-                        <input class="form-control" type="text" id="login" name="login" [(ngModel)]="login">
-                    </div>
-                    <!--Mot de passe-->
-                    <div class="form-outline mb-4">
-                        <label class="form-label" for="password">Mot de passe</label>
-                        <input class="form-control" type="password" id="password" name="password" [(ngModel)]="password">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block mb-4">Créer le compte</button>
-                </form>
-            </div>
+  <!-- Register Form -->
+  @if(active === 'register') {
+    <form (ngSubmit)="onSubmitRegister()" class="auth-form">
+      <div class="form-row-2">
+        <div class="form-group">
+          <label class="form-label" for="firstName">Prénom</label>
+          <input
+            class="form-control"
+            type="text"
+            id="firstName"
+            name="firstName"
+            [(ngModel)]="firstName"
+            placeholder="Jean"
+            autocomplete="given-name">
         </div>
-    </div>
+        <div class="form-group">
+          <label class="form-label" for="lastName">Nom</label>
+          <input
+            class="form-control"
+            type="text"
+            id="lastName"
+            name="lastName"
+            [(ngModel)]="lastName"
+            placeholder="Dupont"
+            autocomplete="family-name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="regLogin">Nom d'utilisateur</label>
+        <input
+          class="form-control"
+          type="text"
+          id="regLogin"
+          name="login"
+          [(ngModel)]="login"
+          placeholder="jean.dupont"
+          autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="regPassword">Mot de passe</label>
+        <input
+          class="form-control"
+          type="password"
+          id="regPassword"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="••••••••"
+          autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn btn-success btn-block btn-lg" style="margin-top: 0.5rem;">
+        Créer le compte
+      </button>
+    </form>
+  }
 </div>

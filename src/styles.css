@@ -1,17 +1,373 @@
-/* You can add global styles to this file, and also import other style files */
+/* =====================================================
+   Global Design System
+   ===================================================== */
 
-.footer
-{
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 70px;
-    background-color: blue;
-    text-align: center;
-    color: white;
+:root {
+  --primary:        #4F46E5;
+  --primary-hover:  #4338CA;
+  --primary-light:  #EEF2FF;
+  --primary-text:   #FFFFFF;
+  --success:        #10B981;
+  --success-light:  #D1FAE5;
+  --danger:         #EF4444;
+  --danger-light:   #FEE2E2;
+  --warning:        #F59E0B;
+  --warning-light:  #FEF3C7;
+  --info:           #3B82F6;
+  --info-light:     #DBEAFE;
+
+  --bg:             #F1F5F9;
+  --surface:        #FFFFFF;
+  --border:         #E2E8F0;
+  --border-focus:   #A5B4FC;
+
+  --text:           #0F172A;
+  --text-secondary: #475569;
+  --text-muted:     #94A3B8;
+
+  --shadow-xs:  0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow:     0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-md:  0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-lg:  0 20px 25px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.04);
+
+  --radius-sm:  6px;
+  --radius:     10px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-pill: 999px;
+
+  --transition: 0.18s ease;
 }
 
-.container
-{
-    margin-bottom: 100px;
+/* =====================================================
+   Base Reset
+   ===================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
 }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+}
+
+/* =====================================================
+   Layout
+   ===================================================== */
+
+.page-wrapper {
+  min-height: calc(100vh - 64px - 60px);
+  padding: 2rem 0 6rem;
+}
+
+.container {
+  margin-bottom: 5rem;
+}
+
+/* =====================================================
+   Footer
+   ===================================================== */
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 52px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  z-index: 100;
+  box-shadow: 0 -1px 0 rgba(0,0,0,0.04);
+}
+
+/* =====================================================
+   Cards
+   ===================================================== */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.card-header-custom {
+  padding: 1.5rem 1.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-body-custom {
+  padding: 1.75rem;
+}
+
+/* =====================================================
+   Buttons
+   ===================================================== */
+
+.btn {
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border: 1px solid var(--primary);
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+  border: 1px solid var(--danger);
+}
+.btn-danger:hover {
+  background: #DC2626;
+  border-color: #DC2626;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-success {
+  background: var(--success);
+  color: #fff;
+  border: 1px solid var(--success);
+}
+.btn-success:hover {
+  background: #059669;
+  border-color: #059669;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-info {
+  background: var(--info);
+  color: #fff;
+  border: 1px solid var(--info);
+}
+.btn-info:hover {
+  background: #2563EB;
+  border-color: #2563EB;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover {
+  background: var(--bg);
+  color: var(--text);
+  border-color: #CBD5E1;
+}
+
+.btn-dark {
+  background: var(--text);
+  color: #fff;
+  border: 1px solid var(--text);
+}
+.btn-dark:hover {
+  background: #1E293B;
+  color: #fff;
+}
+
+.btn-sm {
+  font-size: 13px;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  font-size: 15px;
+  padding: 0.7rem 1.5rem;
+  border-radius: var(--radius);
+}
+
+.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+/* =====================================================
+   Forms
+   ===================================================== */
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.375rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.form-control {
+  font-family: inherit;
+  font-size: 14.5px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.85rem;
+  width: 100%;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  line-height: 1.5;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.form-control::placeholder { color: var(--text-muted); }
+
+.form-group { margin-bottom: 1.25rem; }
+
+/* =====================================================
+   Alerts
+   ===================================================== */
+
+.alert {
+  border-radius: var(--radius);
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0.875rem 1.125rem;
+}
+
+.alert-success {
+  background: var(--success-light);
+  color: #065F46;
+}
+
+.alert-danger {
+  background: var(--danger-light);
+  color: #991B1B;
+}
+
+/* =====================================================
+   Badges
+   ===================================================== */
+
+.badge {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.bg-secondary { background: #64748B !important; }
+.bg-primary   { background: var(--primary) !important; }
+.bg-danger    { background: var(--danger) !important; }
+.bg-success   { background: var(--success) !important; }
+
+/* =====================================================
+   Angular Material Overrides
+   ===================================================== */
+
+.mat-mdc-form-field {
+  font-family: 'Inter', sans-serif !important;
+}
+
+.mat-mdc-table {
+  background: transparent !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  color: var(--text-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  background: var(--bg) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.mat-mdc-cell {
+  font-size: 14px !important;
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 0.85rem 1rem !important;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background: var(--primary-light) !important;
+}
+
+.mat-mdc-row:last-child .mat-mdc-cell {
+  border-bottom: none !important;
+}
+
+.mat-mdc-paginator {
+  background: transparent !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+}
+
+/* =====================================================
+   Page titles
+   ===================================================== */
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* =====================================================
+   Utilities
+   ===================================================== */
+
+.text-muted-sm { color: var(--text-muted); font-size: 13px; }
+.mt-sm { margin-top: 1rem; }
+.mb-sm { margin-bottom: 1rem; }

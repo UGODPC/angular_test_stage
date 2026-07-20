@@ -1,41 +1,64 @@
-<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-  <ul class="navbar-nav w-100 align-items-center"> <!--w-100 c'est pour dire width = 100% et donc ici que ul est de longueur 100%.-->
-    <li class="nav-item">
-      <a routerLink="livres" routerLinkActive="active" class="nav-link">Liste des livres</a>
-    </li>
-    <li class="nav-item">
-      <a routerLink="creerLivre" routerLinkActive="active" class="nav-link">Ajouter un livre</a>
-    </li>
-    @if(loginService.isAdmin())
-    {
-      <li class="nav-item">
-        <a routerLink="admin" routerLinkActive="active" class="nav-link">Admin</a>
+<nav class="app-navbar">
+  <div class="navbar-inner">
+    <!-- Brand -->
+    <a routerLink="livres" class="navbar-brand">
+      <span class="brand-icon">📚</span>
+      <span class="brand-name">Ma Bibliothèque</span>
+    </a>
+
+    <!-- Nav links -->
+    <ul class="navbar-links">
+      <li>
+        <a routerLink="livres" routerLinkActive="active" class="nav-link">
+          Livres
+        </a>
       </li>
-    }
-    <li class="nav-item">
-      <a routerLink="authentification" routerLinkActive="active" class="nav-link">Compte</a>
-    </li>
-      @if(isLoggedIn())
-      {
-        <li class="nav-item ms-auto navbar-text" style="margin-right: 15px;"> <!--ms-auto est là pour pousser un/des éléments à droite à partir du moment où on l'utilise-->
-          <p>Bonjour {{getUserData().firstName}}</p>
-        </li>
-        <li class="nav-item" style="margin-right: 10px;">
-          <button (click)="logout()" class="btn btn-dark" style="color: white; text-decoration: none;">
-            Déconnexion
-          </button>
+      <li>
+        <a routerLink="creerLivre" routerLinkActive="active" class="nav-link">
+          Ajouter
+        </a>
+      </li>
+      @if(loginService.isAdmin()) {
+        <li>
+          <a routerLink="admin" routerLinkActive="active" class="nav-link nav-link-admin">
+            Admin
+          </a>
         </li>
       }
-  </ul>
+      <li>
+        <a routerLink="authentification" routerLinkActive="active" class="nav-link">
+          Compte
+        </a>
+      </li>
+    </ul>
+
+    <!-- User area -->
+    <div class="navbar-user">
+      @if(isLoggedIn()) {
+        <div class="user-info">
+          <div class="user-avatar">
+            {{ getUserData().firstName?.charAt(0)?.toUpperCase() }}
+          </div>
+          <span class="user-name">{{ getUserData().firstName }}</span>
+        </div>
+        <button (click)="logout()" class="btn-logout">
+          Déconnexion
+        </button>
+      } @else {
+        <a routerLink="authentification" class="btn btn-primary btn-sm">
+          Se connecter
+        </a>
+      }
+    </div>
+  </div>
 </nav>
 
-<h1 class="text-center" style="margin-top: 10px;"> {{title()}} </h1>
-<div class="container">
-  <router-outlet></router-outlet>
+<div class="page-wrapper">
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
 </div>
 
 <footer class="footer">
-  <div class="container">
-    <span>Découverte Angular et Tutos...</span>
-  </div>
+  <span>Ma Bibliothèque &mdash; Gestion de livres</span>
 </footer>
