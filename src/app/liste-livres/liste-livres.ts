@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, ViewChild, SchemaMetadata } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { from, Observable } from 'rxjs';
@@ -21,7 +21,7 @@ import { LoginService } from '../login-service';
 export class ListeLivres implements OnInit, AfterViewInit {
   private bookService = inject(BookService);
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  public router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   public loginService = inject(LoginService);
   
@@ -37,6 +37,8 @@ export class ListeLivres implements OnInit, AfterViewInit {
   currentPage = 0;
   pageSize = 5; //Toujours 5 au départ
   livreCompteur: number = 0;
+
+  public isAuthenticated(): boolean { return this.loginService.isAuthenticated() };
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 

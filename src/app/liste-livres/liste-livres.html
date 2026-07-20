@@ -75,9 +75,13 @@
   <!-- Message quand pas de données -->
   <tr class="mat-row" *matNoDataRow>
     <td class="mat-cell" [attr.colspan]="displayedColumns.length" style="text-align: center; padding: 20px;">
-      @if (loading)
+      @if(loading)
       {
         ⏳ Chargement des livres...
+      }
+      @else if (!loginService.isAuthenticated())
+      {
+        <button class="btn btn-dark" (click)="router.navigate(['/authentification'])">Se connecter</button>
       }
       @else
       {
@@ -85,9 +89,8 @@
       }
     </td>
   </tr>
-
-  <!-- Row shown when there is no matching data. -->
-  <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-  </tr>
 </table>
+@if(!isAuthenticated())
+{
+  <span>Vous devez vous connecter pour accéder à la liste les livres</span>
+}

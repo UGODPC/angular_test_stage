@@ -77,6 +77,69 @@ export class LoginService {
         }
     }
 
+    //Va permettre de décoder le token de l'utilisateur
+    private decodeToken(token: string): any | null {
+        try
+        {
+            //Le token JWT a 3 parties : header.payload.signature
+            const parts = token.split('.');
+            if(parts.length !== 3)
+            {
+                return null;
+            }
+            //Décoder la partie payload (base64url)
+            const payload = parts[1];
+            const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/')); //atob pour décoder une chaîne en Base64
+            return JSON.parse(decoded); //parse un JSON en Objet
+        }
+        catch(error)
+        {
+            console.error('❌ Erreur de décodage du token :', error);
+            return null;
+        }
+    }
+
+    //Va permettre d'obtenir la date d'expiration du token
+    getTokenExpiration(): Date | null {
+        const token = this.getAuthToken();
+        //Si aucun token trouvé, on retourne null, ainsi on fait rien
+        if(!token)
+        {
+            return null;
+        }
+
+        const decoded = this.decodeToken(token);
+        if(!decoded || !decoded.exp)
+        {
+            return null;
+        }
+        let dateExp = new Date(decoded.exp * 1000);
+        return dateExp;
+    }
+
+    //Va permettre de savoir si le token est valide
+    isTokenValid(): boolean {
+        const token = this.getAuthToken();
+        //Si aucun token trouvé, retourner faux
+        if(!token)
+        {
+            console.log('Aucun token trouvé');
+            return false;
+        }
+
+        const expiration = this.getTokenExpiration();
+        if(!expiration)
+        {
+            console.log('Token sans expiration');
+            return false;
+        }
+
+        const now = new Date();
+        const isValid = now < expiration;
+
+        return isValid;
+    }
+
     // ========== MÉTHODES POUR LES RÔLES ET PERMISSIONS ==========
 
     getUserRoles(): string[] {
