@@ -37,23 +37,23 @@
   </div>
 </div>
 
-<table matSort mat-table [dataSource]="dataSource" class="table table-striped table-bordered">
+<table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)" class="table table-striped table-bordered">
   
   <!-- Colonne ID -->
   <ng-container matColumnDef="id">
-    <th mat-sort-header mat-header-cell *matHeaderCellDef> ID </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Trier par ID"> ID </th>
     <td mat-cell *matCellDef="let book"> {{ book.id }} </td>
   </ng-container>
 
   <!-- Colonne Nom -->
   <ng-container matColumnDef="name">
-    <th mat-sort-header mat-header-cell *matHeaderCellDef> Nom </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Trier par nom"> Nom </th>
     <td mat-cell *matCellDef="let book"> {{ book.name }} </td>
   </ng-container>
 
   <!-- Colonne Pages -->
   <ng-container matColumnDef="pages">
-    <th mat-sort-header mat-header-cell *matHeaderCellDef> Pages </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Trier par nombre de pages"> Pages </th>
     <td mat-cell *matCellDef="let book"> {{ book.pages }} </td>
   </ng-container>
 
@@ -68,7 +68,7 @@
 
   <!-- Ligne d'en-tête -->
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  
+
   <!-- Lignes de données -->
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 

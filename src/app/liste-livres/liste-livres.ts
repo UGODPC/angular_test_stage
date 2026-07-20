@@ -1,4 +1,5 @@
-import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { Component, OnInit, inject, ChangeDetectorRef, AfterViewInit, ViewChild, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { from, Observable } from 'rxjs';
@@ -9,20 +10,23 @@ import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/p
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 import { MatFormField } from '@angular/material/select';
 import { MatInputModule} from '@angular/material/input';
+import { MatSort, Sort, MatSortModule} from '@angular/material/sort';
 import { LoginService } from '../login-service';
 
 @Component({
   selector: 'app-liste-livres',
   standalone: true,
-  imports: [CommonModule, MatPaginatorModule, MatTableModule, MatFormField, MatInputModule],
+  imports: [CommonModule, MatPaginatorModule, MatTableModule, MatFormField, MatInputModule, MatSortModule],
   templateUrl: './liste-livres.html',
   styleUrl: './liste-livres.css',
 })
 export class ListeLivres implements OnInit, AfterViewInit {
   private bookService = inject(BookService);
   private route = inject(ActivatedRoute);
-  public router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private _liveAnnouncer = inject(LiveAnnouncer);
+
+  public router = inject(Router);
   public loginService = inject(LoginService);
   
   dataSource = new MatTableDataSource<Book>();
@@ -41,7 +45,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
   public isAuthenticated(): boolean { return this.loginService.isAuthenticated() };
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
+  @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
     this.loading = true;
@@ -56,6 +60,7 @@ export class ListeLivres implements OnInit, AfterViewInit {
     {
       this.dataSource.paginator = this.paginator; //paginator vient avec dataSource du MatTableDataSource
     }
+    this.dataSource.sort = this.sort; //
     this.dataSource.filterPredicate = this.customFilterPredicate.bind(this); //filterPredicate vient du MatTableDataSource
     
     console.log("Paginator connecté.");
@@ -192,34 +197,19 @@ export class ListeLivres implements OnInit, AfterViewInit {
     }
   }
 
-  sortedData = signal(this.desserts.slice());
-
-  sortData(sort: Sort) {
-    const data = this.desserts.slice();
-    if (!sort.active || sort.direction === '') {
-      this.sortedData.set(data);
-      return;
+  announceSortChange(sortState: Sort) {
+    // This example uses English messages. If your application supports
+    // multiple language, you would internationalize these strings.
+    // Furthermore, you can customize the message to add additional
+    // details about the values being sorted.
+    if (sortState.direction)
+    {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     }
-
-    this.sortedData.set(
-      data.sort((a, b) => {
-        const isAsc = sort.direction === 'asc';
-        switch (sort.active) {
-          case 'name':
-            return compare(a.name, b.name, isAsc);
-          case 'calories':
-            return compare(a.calories, b.calories, isAsc);
-          case 'fat':
-            return compare(a.fat, b.fat, isAsc);
-          case 'carbs':
-            return compare(a.carbs, b.carbs, isAsc);
-          case 'protein':
-            return compare(a.protein, b.protein, isAsc);
-          default:
-            return 0;
-        }
-      }),
-    );
+    else
+    {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 
   exportToExcel()
@@ -320,7 +310,3 @@ export class ListeLivres implements OnInit, AfterViewInit {
     return text.replace(/[&<>"']/g, (m) => map[m]);
   }
 }
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-  }
